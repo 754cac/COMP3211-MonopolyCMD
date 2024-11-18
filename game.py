@@ -1,6 +1,6 @@
 import json
 import vars
-from gameboard import Gameboard
+from gameboard import Gameboard, check_design
 from player import Player
 import pathlib as pl
 import random
@@ -10,7 +10,7 @@ import pandas as pd
 class Game:
 
     def __init__(self):
-        print(vars.TITLE_TEXT)
+
         self.gameboard = None
         self.players = {}
         self.player_orders = {}
@@ -200,7 +200,7 @@ class Game:
         }
 
         # For Gameboard
-        gameboard_design_selection = vars.handle_question_with_options('Load default design [0] or load existing design [1] ', ['0', '1'])
+        gameboard_design_selection = vars.handle_question_with_options('Load default design [0] or Load existing design [1] ', ['0', '1'])
 
         gameboard = Gameboard()
         if gameboard_design_selection == '0':
@@ -208,14 +208,19 @@ class Game:
 
         if gameboard_design_selection == '1':
             while True:
-                gameboard_design_path = input('Please insert path to gameboard design: [-1 to exit] ')
+                gameboard_design_file_name = input('Please insert gameboard design file name: [-1 to exit] ')
                 try:
-                    if gameboard_design_path == '-1':
+                    if gameboard_design_file_name == '-1':
                         break
-                    gameboard_design_path = pl.Path(gameboard_design_path)
+                    gameboard_design_path = vars.BASE_GAMEBOARD_DESIGN_DIR / gameboard_design_file_name
                     gameboard_design = json.load(open(gameboard_design_path, 'r'))
-                    gameboard.load_design(gameboard_design)
-                    break
+                    design_is_valid = check_design(gameboard_design)
+                    if design_is_valid:
+                        gameboard.load_design(gameboard_design)
+                        break
+                    else:
+                        print('Invalid design!')
+                        return False
                 except:
                     continue
 
@@ -370,10 +375,7 @@ class Game:
                     while True:
 
                         # Asking show status or continue
-                        while True:
-                            show_status_or_continue = input(f'<---- Show status [0], query next player [1] or continue [empty input] ? ')
-                            if show_status_or_continue in ['0', '1', '2', '']:
-                                break
+                        show_status_or_continue = vars.handle_question_with_options(f'<---- Show status [0], query next player [1] or continue [empty input] ? ', ['0', '1', '2', ''])
 
                         if show_status_or_continue == '':
                             break
@@ -387,10 +389,7 @@ class Game:
 
                         else:
                             # Asking show what status
-                            while True:
-                                user_show_status_selection = input(f'<---- Show own status [0], specific player status [1], all players status [2], game status [3]? ')
-                                if user_show_status_selection in ['0', '1', '2', '3']:
-                                    break
+                            user_show_status_selection = vars.handle_question_with_options(f'<---- Show own status [0], specific player status [1], all players status [2], game status [3]? ', ['0', '1', '2', '3'])
 
                             if user_show_status_selection == '0':
                                 self.show_player_status(current_player.id)
@@ -435,11 +434,8 @@ class Game:
                         # Handle on landing on property square
                         if current_location['is_ownable'] and current_location['name'].lower() != 'go':
                             if not current_location['ownership'] and current_player.money > current_location['price']:
-                                while True:
-                                    buy_property_selection = input(f'<---- {current_location["name"]} is not owned! Do you wanna buy it? [Y / n] ')
-                                    if buy_property_selection in ['y', 'n', '']:
-                                        buy_property_selection = buy_property_selection.lower()
-                                        break
+                                buy_property_selection = vars.handle_question_with_options(f'<---- {current_location["name"]} is not owned! Do you wanna buy it? [Y / n] ', ['y', 'n', ''])
+
                                 if buy_property_selection == 'y' or buy_property_selection == '':
                                     current_player.buy_property(current_player.location, current_location['price'])
                                     self.change_property_ownership(current_player)

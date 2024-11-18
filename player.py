@@ -46,11 +46,9 @@ class Player:
                     if self.jailed_rounds_count_down == 1 and self.money > jailbreak_price:
 
                         print(f'{self.name} is jailed for the 3rd round if {self.name} is not paying jailbreak money and {self.name} can not make a double!')
-                        while True:
-                            selection = input(f'Pay ${jailbreak_price} to jailbreak immediately [Y / n] ? ')
-                            if selection.lower() in ['y', 'n', '']:
-                                selection = selection.lower()
-                                break
+
+                        selection = vars.handle_question_with_options(f'Pay ${jailbreak_price} to jailbreak immediately [Y / n] ? ', ['y', 'n', ''])
+
                         if selection.lower() == 'y' or selection.lower() == '':
                             self.money -= jailbreak_price
                             print(f'{self.name} jailbreak success by paying ${jailbreak_price}!')

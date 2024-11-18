@@ -15,8 +15,19 @@ def is_valid_save_file_name(s):
     return bool(re.match(pattern, s))
 
 
+def is_valid_type(s, type_functions):
+    try:
+        if len(type_functions) > 1 and type_functions[1]:
+            return s == '' or (type_functions[0](s) and type(type_functions[0](s)) == type_functions[0])
+        else:
+            return type_functions[0](s) and type(type_functions[0](s)) == type_functions[0]
+    except Exception as e:
+        print(f'Non valid entry: {e}')
+
+    return False
+
 def handle_question_with_options(question, options, case_sensitive=False):
-    while True and len(question) > 0:
+    while True and len(options) > 0:
         answer = input(question)
         if case_sensitive:
             if answer in options:
@@ -26,13 +37,18 @@ def handle_question_with_options(question, options, case_sensitive=False):
                 return answer.lower()
 
 
-def handle_question_with_function(question, check_function):
+def handle_question_with_function(question, check_function, extra_input=[]):
     while True and check_function is not None:
         answer = input(question)
-        if check_function(answer):
-            return answer
+        if len(extra_input) > 0:
+            if check_function(answer, extra_input):
+                return answer
+        else:
+            if check_function(answer):
+                return answer
 
 
+SQUARE_DESIGN = True
 BASE_GAMEBOARD_DESIGN_DIR = pl.Path.cwd() / "data" / "gameboard_design"
 BASE_GAMEBOARD_DESIGN_DIR.mkdir(exist_ok=True)
 BASE_SAVE_STATE_PATH = pl.Path.cwd() / "data" / "save_state"
