@@ -503,6 +503,7 @@ class Game:
                         print(f'Winner {idx+1}: {winner[0]}, Money: {winner[1]}')
                 break
 
+            self.game_state["current_round"] += 1
 
     def check_only_player_is_left(self):
         winners = [[player.name, player.money] for player_id, player in self.players.items() if not player.is_retired]
