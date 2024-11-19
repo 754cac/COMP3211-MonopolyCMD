@@ -464,32 +464,36 @@ class Game:
                                 continue
 
     def play(self):
-
-        save_game = vars.handle_question_with_options('\nDo you want to save the game? [y / N] ? ', ['y', 'n', ''])
-
-        if save_game == 'y':
-            save_file_name = vars.handle_question_with_function('Please enter save name [only alphanumeric characters and underscores, ends with .json]: ', vars.is_valid_save_file_name)
-            self.save_game_state(save_file_name)
-            continue_playing = vars.handle_question_with_options('Continue playing [Y / n] ? ', ['y', 'n', ''])
-
-            if continue_playing == 'n':
-                print('See you in the next game!')
-                self.game_state["game_over"] = True
-
         while True and not self.game_state["game_over"]:
-            self.play_one_round()
-            self.game_state["current_round"] += 1
+            # Show the current status of the game
+            self.show_game_status()  # Assuming you have a method to show the game status
 
-            save_game = vars.handle_question_with_options('\nDo you want to save the game? [y / N] ? ',['y', 'n', ''])
-            if save_game == 'y':
-                save_file_name = vars.handle_question_with_function('Please enter save name [only alphanumeric characters and underscores, ends with .json]: ', vars.is_valid_save_file_name)
+            # Present options to the player
+            action = vars.handle_question_with_options(
+                '\nShow status [0], Save game [1], Query next player [2], or Continue [empty input]? ',
+                ['0', '1', '2', '']
+            )
+
+            if action == '0':
+                self.show_game_status()  # Show the current game status
+            elif action == '1':
+                save_file_name = vars.handle_question_with_function(
+                    'Please enter save name [only alphanumeric characters and underscores, ends with .json]: ',
+                    vars.is_valid_save_file_name
+                )
                 self.save_game_state(save_file_name)
-                continue_playing = vars.handle_question_with_options('Continue playing [Y / n] ? ', ['y', 'n', ''])
-
+                continue_playing = vars.handle_question_with_options(
+                    'Continue playing [Y / n]? ', ['y', 'n']
+                )
                 if continue_playing == 'n':
                     print('See you in the next game!')
                     self.game_state["game_over"] = True
+            elif action == '2':
+                self.query_next_player()  # Assuming you have a method to query the next player
+            elif action == '':
+                self.play_one_round()  # Continue playing if no input is given
 
+            # Check for game over conditions
             if self.game_state["current_round"] > self.game_parameters["maximum_rounds"] and not self.game_state["game_over"]:
                 player_records = {player.name: player.money for player_id, player in self.players.items()}
                 winners = [[name, amount] for name, amount in player_records.items() if amount == max(list(player_records.values()))]
@@ -500,6 +504,7 @@ class Game:
                     for idx, winner in enumerate(winners):
                         print(f'Winner {idx+1}: {winner[0]}, Money: {winner[1]}')
                 break
+
 
     def check_only_player_is_left(self):
         winners = [[player.name, player.money] for player_id, player in self.players.items() if not player.is_retired]
