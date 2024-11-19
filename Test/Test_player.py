@@ -1,9 +1,7 @@
 import unittest
 from random import randint
-import sys
-sys.path.append(r'..\monopoly_game')
-import vars
 from player import Player 
+import vars
 
 class TestPlayer(unittest.TestCase):
 

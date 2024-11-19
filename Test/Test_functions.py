@@ -1,8 +1,6 @@
 import unittest
 from unittest.mock import Mock
 import random
-import sys
-sys.path.append(r'..\monopoly_game')
 from functions import go, income_tax, chance, free_parking, just_visiting_or_in_jail, go_to_jail, retire
 
 class TestGameFunctions(unittest.TestCase):
