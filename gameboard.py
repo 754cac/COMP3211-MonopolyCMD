@@ -399,9 +399,9 @@ class Gameboard:
                 pd.set_option('display.max_columns', None)  # Show all columns
                 pd.set_option('display.max_colwidth', None)  # Show full column content
                 if len(gameboard_df) > 0:
-                    print('\nGameboard Status: \n', gameboard_df.to_string(index=False), '\n')
+                    print(f'\nGameboard Size: {new_design["size"]}\nGameboard Status: \n', gameboard_df.to_string(index=False), '\n')
                 else:
-                    print('\nGameboard Status: \n', 'Empty', '\n')
+                    print('\nGameboard Size: 0\nGameboard Status: \n', 'Empty', '\n')
 
             elif cell_type == '4':
                 check_design(new_design)
