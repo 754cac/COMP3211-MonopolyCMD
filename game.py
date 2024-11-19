@@ -470,8 +470,8 @@ class Game:
 
             # Present options to the player
             action = vars.handle_question_with_options(
-                '\nShow status [0], Save game [1], Query next player [2], or Continue [empty input]? ',
-                ['0', '1', '2', '']
+                '\nShow status [0], Save game [1] or Continue [empty input]? ',
+                ['0', '1', '']
             )
 
             if action == '0':
@@ -488,8 +488,6 @@ class Game:
                 if continue_playing == 'n':
                     print('See you in the next game!')
                     self.game_state["game_over"] = True
-            elif action == '2':
-                self.query_next_player()  # Assuming you have a method to query the next player
             elif action == '':
                 self.play_one_round()  # Continue playing if no input is given
 
