@@ -5,13 +5,14 @@ from functions import available_functions
 
 
 def check_design(design):
+
     count = 0
     if design["enforce_square_design"]:
         if design["size"] % 4 != 0:
             print("Error: Board size must be multiple of 4 to enforce square gameboard design!")
             count += 1
 
-    # Check if the design size is bigger than the board size
+    # Check if design size is bigger than the board size
     all_locations_indice = [i['location'] for i in design['properties']] + [i['location'] for i in design['functions']]
     for i in range(1, design["size"]+1):
         if i not in all_locations_indice:
@@ -19,7 +20,7 @@ def check_design(design):
             count += 1
             break
 
-    # Check if the design size is bigger than the board size
+    # Check if design size is bigger than the board size
     if int(design['size']) != len(design['properties']) + len(design['functions']):
         print("Error: Board Size must be equal to sum of properties and functions!")
         count += 1
@@ -51,7 +52,7 @@ def check_design(design):
         print("Error: Duplicate property name detected.")
         count += 1
 
-    # Check if Just Visiting / In Jail exists if Go To Jail exists
+    # Check if Just Visiting / In Jail exist if Go To Jail Exist
     functions_names = [row['name'] for row in design['functions']]
     if "Go To Jail" in functions_names and not "Just Visiting / In Jail" in functions_names:
         print("Error: Just Visiting / In Jail needs to exist if Go To Jail exists")
@@ -128,7 +129,6 @@ class Gameboard:
         }
 
     def load_design(self, design):
-
         layout = {}
         for row in design['properties']:
             layout.update({
