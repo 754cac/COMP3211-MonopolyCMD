@@ -303,7 +303,8 @@ class Game:
 
             # For Loading Gameboard
             gameboard = Gameboard()
-            gameboard.load_design(vars.BASE_GAMEBOARD_DESIGN_DIR / save_state['gameboard']['design_file_name'])
+            gameboard_design = json.load(open(vars.BASE_GAMEBOARD_DESIGN_DIR / save_state['gameboard']['design_file_name'], 'r'))
+            gameboard.load_design(gameboard_design)
             gameboard.game_id = save_state['gameboard']['game_id']
 
             for player_id, player in players.items():
