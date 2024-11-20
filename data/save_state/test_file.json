@@ -108,7 +108,7 @@
         }
     },
     "gameboard": {
-        "design_file_name": null,
+        "design_file_name": "default_gameboard.json",
         "game_id": "bPYXeTsli87v"
     }
 }
