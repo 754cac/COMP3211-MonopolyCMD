@@ -2,7 +2,7 @@
     "game_state": {
         "game_id": "UmlHQSfbcfYe",
         "game_over": false,
-        "current_round": 4,
+        "current_round": 8,
         "current_player_id": "x0m7KeQGm"
     },
     "player_orders": {
@@ -24,8 +24,10 @@
             "name": "1",
             "id": "x0m7KeQGm",
             "location": 6,
-            "money": 1500,
-            "owned_properties": [],
+            "money": 650,
+            "owned_properties": [
+                12
+            ],
             "is_jailed": true,
             "jailed_rounds_count_down": 3,
             "is_retired": false,
@@ -36,10 +38,12 @@
             "name": "2",
             "id": "QgCWKGdaB",
             "location": 20,
-            "money": 490,
+            "money": 1190,
             "owned_properties": [
                 15,
-                20
+                20,
+                10,
+                14
             ],
             "is_jailed": false,
             "jailed_rounds_count_down": 3,

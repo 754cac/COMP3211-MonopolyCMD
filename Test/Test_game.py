@@ -3,6 +3,7 @@ from unittest.mock import MagicMock, patch
 from game import Game
 from player import Player
 from gameboard import Gameboard
+import logging
 
 class TestGame(unittest.TestCase):
 
@@ -22,7 +23,20 @@ class TestGame(unittest.TestCase):
         self.mock_player.jailed_rounds_count_down = 0
         
         self.game.players = {self.mock_player.id: self.mock_player}
-        self.game.player_orders = {1: self.mock_player.id}
+        self.game.player_orders = {1: '1', 2: '2'}
+        self.game.players = {
+            "1": Player("Player1", 10, "game_1"),
+            "2": Player("Player2", 10, "game_1")
+        }
+        self.game.players["1"].owned_properties = [0, 1]
+        self.game.gameboard.actual_layout = {
+            'layout': {
+                0: {'ownership': '1', 'owner_name': 'Player1', 'is_ownable': True},
+                1: {'ownership': '1', 'owner_name': 'Player1', 'is_ownable': True},
+                2: {'ownership': None, 'owner_name': '', 'is_ownable': True},
+                3: {'ownership': None, 'owner_name': '', 'is_ownable': False}
+            }
+        }
 
     def test_change_property_ownership(self):
         self.game.gameboard.actual_layout = {'layout': {0: {'is_ownable': True, 'ownership': None}}}
@@ -33,7 +47,7 @@ class TestGame(unittest.TestCase):
         self.mock_player.retired = MagicMock()
         self.game.retire_player(self.mock_player)
         self.assertTrue(self.mock_player.retired.called)
-        self.assertEqual(self.game.player_orders, {1: 'player1'})
+        self.assertEqual(self.game.player_orders, {1: '1', 2: '2'})
 
     def test_show_player_status(self):
         self.mock_player.show_status = MagicMock()
@@ -68,6 +82,45 @@ class TestGame(unittest.TestCase):
 
     def test_play_one_round(self):
         self.game.play_one_round()
+
+    def test_change_property_ownership_retire(self):
+        # Act
+        self.game.change_property_ownership(self.game.players["1"], active_retire_player=True)
+        
+        # Assert
+        for prop in self.game.players["1"].owned_properties:
+            self.assertIsNone(self.game.gameboard.actual_layout['layout'][prop]['ownership'])
+            self.assertEqual(self.game.gameboard.actual_layout['layout'][prop]['owner_name'], '')
+
+    def test_change_property_ownership_buy(self):
+        player = self.game.players["2"]
+        player.location = 2
+        self.game.change_property_ownership(player)
+        
+        self.assertEqual(self.game.gameboard.actual_layout['layout'][player.location]['ownership'], player.id)
+        self.assertEqual(self.game.gameboard.actual_layout['layout'][player.location]['owner_name'], player.name)
+
+    def test_change_property_ownership_not_ownable(self):
+        player = self.game.players["2"]
+        player.location = 3
+        with self.assertLogs(level='INFO') as log:
+            self.game.change_property_ownership(player)
+            self.assertIn('Not ownable.', log.output)
+
+    def test_retire_player(self):
+        self.game.retire_player(self.game.players["1"])
+        self.assertTrue(self.game.players["1"].is_retired)
+
+    def test_show_player_status(self):
+        with self.assertLogs(level='INFO') as log:
+            self.game.show_player_status("1")
+            self.assertTrue("Player Player1 (ID: 1)", log.output)
+
+    def test_play_one_round_player_retirement(self):
+        player = self.game.players["1"]
+        player.money = 0
+        self.game.play_one_round()
+        self.assertFalse(player.is_retired)
 
 if __name__ == '__main__':
     unittest.main()
