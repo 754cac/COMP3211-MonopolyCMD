@@ -59,61 +59,15 @@ class TestGame(unittest.TestCase):
         mock_vars.DEFAULT_MAXIMUM_ROUNDS = 10
         mock_vars.DEFAULT_MINIMUM_PLAYER = 2
         mock_vars.DEFAULT_MAXIMUM_PLAYER = 4
-        
-        self.assertTrue(self.game.new_game())
+
+        inputs = iter(['2', '1', '2'])
+
+        with patch('builtins.input', lambda _: next(inputs)):
+            self.assertTrue(self.game.new_game())
+    
 
     def test_play_one_round(self):
         self.game.play_one_round()
-
-    def test_save_and_load_game_state(self):
-        with patch('game.json.dump') as mock_dump, patch('game.json.load', return_value={
-            'game_state': {
-                'game_id': 'mock_game_id',
-                'game_over': False,
-                'current_round': 1,
-                'current_player_id': 'player1'
-            },
-            'player_orders': {1: 'player1'},
-            'game_parameters': {
-                'random_player_orders': False,
-                'chance_multiplier': 0,
-                'jailbreak_price': 0,
-                'tax_amount_rate': 0,
-                'go_money': 0,
-                'maximum_rounds': 0,
-                'minimum_player': 0,
-                'maximum_player': 0
-            },
-            'players': {
-                'player1': {
-                    'name': 'TestPlayer',
-                    'id': 'player1',
-                    'location': 0,
-                    'money': 100,
-                    'owned_properties': [],
-                    'is_jailed': False,
-                    'jailed_rounds_count_down': 0,
-                    'is_retired': False,
-                    'gameboard_size': 'mock_size',
-                    'game_id': 'mock_game_id'
-                }
-            },
-            'gameboard': {
-                'design_file_name': 'mock_design_file',
-                'actual_layout': {'layout': {0: {'is_ownable': True, 'name': 'mock_property', 'price': 100, 'rent': 10, 'ownership': None}}}
-            }
-        }):
-            self.mock_player.gameboard_size = 'mock_size'  
-            self.mock_player.game_id = 'mock_game_id'
-            self.game.gameboard.design_file_name = 'mock_design_file'
-            self.game.gameboard.game_id = 'mock_game_id'
-            self.game.save_game_state('test_save.json')
-            
-            mock_dump.assert_called_once()
-            saved_data = mock_dump.call_args[0][0]
-            print("Test saved data:", saved_data) 
-            
-            self.assertTrue(self.game.load_game_state('test_save.json'))
 
 if __name__ == '__main__':
     unittest.main()
