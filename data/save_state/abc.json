@@ -1,116 +1,55 @@
 {
     "game_state": {
-        "game_id": "bPYXeTsli87v",
+        "game_id": "UmlHQSfbcfYe",
         "game_over": false,
-        "current_round": 6,
-        "current_player_id": "Wpe2LHtmJ"
+        "current_round": 4,
+        "current_player_id": "x0m7KeQGm"
     },
     "player_orders": {
-        "8": "Wpe2LHtmJ",
-        "1": "kAWCMUdcc",
-        "2": "EO46aLLhv",
-        "3": "RFaY7cZmF",
-        "4": "XIqOGzgff",
-        "7": "PBMPab2sy"
+        "1": "x0m7KeQGm",
+        "2": "QgCWKGdaB"
     },
     "game_parameters": {
         "random_player_orders": false,
-        "chance_multiplier": 100,
-        "jailbreak_price": 1500,
-        "tax_amount_rate": 0.99,
-        "go_money": 150,
+        "chance_multiplier": 10,
+        "jailbreak_price": 150,
+        "tax_amount_rate": 0.1,
+        "go_money": 1500,
         "maximum_rounds": 100,
         "minimum_player": 2,
         "maximum_player": 6
     },
     "players": {
-        "Wpe2LHtmJ": {
-            "name": "A",
-            "id": "Wpe2LHtmJ",
-            "location": 19,
-            "money": 0,
+        "x0m7KeQGm": {
+            "name": "1",
+            "id": "x0m7KeQGm",
+            "location": 6,
+            "money": 1500,
             "owned_properties": [],
-            "is_jailed": false,
-            "jailed_rounds_count_down": 3,
-            "is_retired": true,
-            "gameboard_size": 20,
-            "game_id": "bPYXeTsli87v"
-        },
-        "kAWCMUdcc": {
-            "name": "B",
-            "id": "kAWCMUdcc",
-            "location": 3,
-            "money": 1700,
-            "owned_properties": [
-                14,
-                17,
-                3
-            ],
-            "is_jailed": false,
+            "is_jailed": true,
             "jailed_rounds_count_down": 3,
             "is_retired": false,
             "gameboard_size": 20,
-            "game_id": "bPYXeTsli87v"
+            "game_id": "UmlHQSfbcfYe"
         },
-        "EO46aLLhv": {
-            "name": "C",
-            "id": "EO46aLLhv",
-            "location": 8,
-            "money": 650,
+        "QgCWKGdaB": {
+            "name": "2",
+            "id": "QgCWKGdaB",
+            "location": 20,
+            "money": 490,
             "owned_properties": [
                 15,
-                8
+                20
             ],
             "is_jailed": false,
             "jailed_rounds_count_down": 3,
             "is_retired": false,
             "gameboard_size": 20,
-            "game_id": "bPYXeTsli87v"
-        },
-        "PBMPab2sy": {
-            "name": "D",
-            "id": "PBMPab2sy",
-            "location": 9,
-            "money": 0,
-            "owned_properties": [],
-            "is_jailed": false,
-            "jailed_rounds_count_down": 3,
-            "is_retired": true,
-            "gameboard_size": 20,
-            "game_id": "bPYXeTsli87v"
-        },
-        "RFaY7cZmF": {
-            "name": "E",
-            "id": "RFaY7cZmF",
-            "location": 6,
-            "money": 850,
-            "owned_properties": [
-                7,
-                18
-            ],
-            "is_jailed": false,
-            "jailed_rounds_count_down": 3,
-            "is_retired": false,
-            "gameboard_size": 20,
-            "game_id": "bPYXeTsli87v"
-        },
-        "XIqOGzgff": {
-            "name": "F",
-            "id": "XIqOGzgff",
-            "location": 6,
-            "money": 950,
-            "owned_properties": [
-                10
-            ],
-            "is_jailed": true,
-            "jailed_rounds_count_down": 1,
-            "is_retired": false,
-            "gameboard_size": 20,
-            "game_id": "bPYXeTsli87v"
+            "game_id": "UmlHQSfbcfYe"
         }
     },
     "gameboard": {
-        "design_file_name": "default_gameboard.json",
-        "game_id": "bPYXeTsli87v"
+        "design_file_name": null,
+        "game_id": "UmlHQSfbcfYe"
     }
 }

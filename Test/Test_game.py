@@ -60,7 +60,7 @@ class TestGame(unittest.TestCase):
         mock_vars.DEFAULT_MINIMUM_PLAYER = 2
         mock_vars.DEFAULT_MAXIMUM_PLAYER = 4
 
-        inputs = iter(['2', '1', '2'])
+        inputs = iter(['2', 'a', 'b'])
 
         with patch('builtins.input', lambda _: next(inputs)):
             self.assertTrue(self.game.new_game())
