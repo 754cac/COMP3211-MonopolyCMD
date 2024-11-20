@@ -127,16 +127,8 @@ class Gameboard:
             "layout": layout
         }
 
-    def load_design(self, design_path, designer_mode=False):
-        design = {}
-        if design_path.is_file():
-            try:
-                design = json.load(open(design_path, "r"))
-                self.design_file_name = design_path.name
-            except:
-                design = {}
+    def load_design(self, design):
 
-        check_design(design)
         layout = {}
         for row in design['properties']:
             layout.update({
