@@ -49,7 +49,7 @@
         }
     },
     "gameboard_parameters": {
-        "design_file_name": default_gameboard.json,
+        "design_file_name": "default_gameboard.json",
         "game_id": "UmlHQSfbcfYe"
     }
 }
