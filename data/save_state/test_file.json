@@ -107,7 +107,7 @@
             "game_id": "bPYXeTsli87v"
         }
     },
-    "gameboard": {
+    "gameboard_parameters": {
         "design_file_name": "default_gameboard.json",
         "game_id": "bPYXeTsli87v"
     }
