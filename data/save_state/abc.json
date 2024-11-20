@@ -48,8 +48,8 @@
             "game_id": "UmlHQSfbcfYe"
         }
     },
-    "gameboard": {
-        "design_file_name": null,
+    "gameboard_parameters": {
+        "design_file_name": default_gameboard.json,
         "game_id": "UmlHQSfbcfYe"
     }
 }
