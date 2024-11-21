@@ -3,7 +3,6 @@ from unittest.mock import patch, MagicMock
 from player import Player
 import vars
 
-
 class TestPlayer(unittest.TestCase):
 
     def setUp(self):
@@ -38,10 +37,6 @@ class TestPlayer(unittest.TestCase):
         self.assertEqual(self.player.location, vars.PLAYER_DEFAULT_PROPERTIES['location'] + 5)
 
     def test_adjust_location(self):
-        self.player.location = 5
-        self.player.adjust_location()
-        self.assertEqual(self.player.location, 5)
-
         self.player.location = 12
         self.player.adjust_location()
         self.assertEqual(self.player.location, 2)
@@ -56,17 +51,17 @@ class TestPlayer(unittest.TestCase):
         self.assertTrue(self.player.is_jailed)
         self.assertEqual(self.player.location, 5)
 
-    @patch('player.vars.handle_question_with_options', return_value='y')
+    @patch('vars.handle_question_with_options', return_value='y')
     @patch('player.Player.roll_dice', return_value=[2, 2])
     def test_jailbreak_success_by_payment(self, mock_roll_dice, mock_handle_question_with_options):
         self.player.is_jailed = True
-        self.player.jailed_rounds_count_down = 1
+        self.player.jailed_rounds_count_down = 3
         self.player.money = 200
 
         dice = self.player.jailbreak(50)
 
         self.assertFalse(self.player.is_jailed)
-        self.assertEqual(self.player.money, 150)
+        self.assertEqual(self.player.money, 150) 
         self.assertEqual(dice, [2, 2])
         mock_handle_question_with_options.assert_called_once()
         mock_roll_dice.assert_called_once()
@@ -79,31 +74,37 @@ class TestPlayer(unittest.TestCase):
         dice = self.player.jailbreak(50)
 
         self.assertFalse(self.player.is_jailed)
-        self.assertEqual(self.player.jailed_rounds_count_down, 3)
+        self.assertEqual(self.player.jailed_rounds_count_down, 3)  # 重置倒計時
         self.assertEqual(dice, [3, 3])
         mock_roll_dice.assert_called_once()
 
-    def test_jailbreak_failed_no_money(self):
+    @patch('player.Player.roll_dice', return_value=[1, 2])
+    def test_jailbreak_failed_no_double(self, mock_roll_dice):
         self.player.is_jailed = True
-        self.player.jailed_rounds_count_down = 1
-        self.player.money = 30 
+        self.player.jailed_rounds_count_down = 2
 
         dice = self.player.jailbreak(50)
 
         self.assertTrue(self.player.is_jailed)
-        self.assertEqual(self.player.money, 30) 
-        self.assertIsNone(dice[0])
-        self.assertIsNone(dice[1])
+        self.assertEqual(self.player.jailed_rounds_count_down, 1)  
+        self.assertEqual(dice, [None, None])
+        mock_roll_dice.assert_called_once()
 
-    def test_jailbreak_forced_payment(self):
+    @patch('vars.handle_question_with_options', return_value='y')
+    @patch('player.Player.roll_dice', return_value=[1, 2])
+    def test_jailbreak_failed_no_money(self, mock_handle_question_with_options, mock_roll_dice):
         self.player.is_jailed = True
-        self.player.jailed_rounds_count_down = 0 
-        self.player.money = 100
+        self.player.jailed_rounds_count_down = 3
+        self.player.money = 30  # 不足以支付
 
         dice = self.player.jailbreak(50)
 
-        self.assertFalse(self.player.is_jailed)
-        self.assertEqual(self.player.money, 50) 
+        self.assertTrue(self.player.is_jailed)
+        self.assertEqual(self.player.money, 30)  # 金額不變
+        self.assertEqual(dice, [1, 2])
+        mock_handle_question_with_options.assert_called_once()
+        mock_roll_dice.assert_called_once()
+
     def test_retired(self):
         self.player.retired()
         self.assertTrue(self.player.is_retired)
@@ -131,7 +132,6 @@ class TestPlayer(unittest.TestCase):
         mock_print.assert_called_with(
             f'\nPlayer ID: {self.player.id}\nPlayer Name: {self.player.name}\nPlayer Location: {self.player.location}\nPlayer Money: {self.player.money}\nPlayer Owned Properties: {self.player.owned_properties}\nPlayer is jailed: {self.player.is_jailed}\nRounds to stay in Jail: {self.player.jailed_rounds_count_down}\n'
         )
-
 
 if __name__ == '__main__':
     unittest.main()

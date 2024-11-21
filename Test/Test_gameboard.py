@@ -1,7 +1,8 @@
 import unittest
-from unittest.mock import patch, MagicMock
-from gameboard import Gameboard, check_design, available_functions
+from unittest.mock import patch, MagicMock, mock_open
+from gameboard import Gameboard, check_design
 import json
+
 
 class TestGameboard(unittest.TestCase):
 
@@ -90,11 +91,10 @@ class TestGameboard(unittest.TestCase):
         with self.assertRaises(AssertionError):
             Gameboard.square_checker(invalid_property_square, "property")
 
-
     def test_check_design_error_board_size(self):
         design = {
             "enforce_square_design": True,
-            "size": 5,  
+            "size": 5, 
             "properties": [],
             "functions": [{"location": 1, "name": "Go", "role": "function", "is_ownable": False}]
         }
@@ -107,14 +107,13 @@ class TestGameboard(unittest.TestCase):
             "enforce_square_design": True,
             "size": 4,
             "properties": [
-                {"location": 1, "name": "Property1", "price": 100, "rent": 10, "is_ownable": True},
-                {"location": 1, "name": "Property2", "price": 150, "rent": 15, "is_ownable": True}  
+                {"location": 1, "name": "Property1", "price": 100, "rent": 10, "is_ownable": True}
             ],
-            "functions": [{"location": 4, "name": "Go", "role": "function", "is_ownable": False}]
+            "functions": [{"location": 3, "name": "Just Visiting / In Jail", "role": "function", "is_ownable": False}]
         }
         with patch('builtins.print') as mock_print:
             self.assertFalse(check_design(design))
-            mock_print.assert_called_with("Error: Duplicate locations detected.")
+            mock_print.assert_called_with("Error: Go does not exist.")
 
     def test_check_design_error_duplicate_locations(self):
         design = {
@@ -122,9 +121,9 @@ class TestGameboard(unittest.TestCase):
             "size": 4,
             "properties": [
                 {"location": 1, "name": "Property1", "price": 100, "rent": 10, "is_ownable": True},
-                {"location": 1, "name": "Property2", "price": 150, "rent": 15, "is_ownable": True}  
+                {"location": 1, "name": "Property2", "price": 150, "rent": 15, "is_ownable": True}  # 重複位置
             ],
-            "functions": [{"location": 4, "name": "Go", "role": "function", "is_ownable": False}]  
+            "functions": [{"location": 4, "name": "Go", "role": "function", "is_ownable": False}]
         }
         with patch('builtins.print') as mock_print:
             self.assertFalse(check_design(design))
@@ -137,12 +136,44 @@ class TestGameboard(unittest.TestCase):
             "properties": [],
             "functions": [
                 {"location": 4, "name": "Go To Jail", "role": "function", "is_ownable": False},
-                {"location": 1, "name": "Go", "role": "function", "is_ownable": False}  # 添加 "Go"
+                {"location": 1, "name": "Go", "role": "function", "is_ownable": False}
             ]
         }
         with patch('builtins.print') as mock_print:
             self.assertFalse(check_design(design))
             mock_print.assert_called_with("Error: Just Visiting / In Jail needs to exist if Go To Jail exists")
+
+    def test_start_or_load_design_gameboard_new(self):
+        with patch('vars.handle_question_with_options', return_value='0'), \
+             patch('vars.handle_question_with_function', side_effect=['gameboard.json', 10, 
+                                                                      1, 'Tai Po', 999999, 999999, True, 
+                                                                      2, 'Tai Po', 999999, 999999, True, 
+                                                                      3, 'Tai Po', 999999, 999999, True, 
+                                                                      4, 'Tai Po', 999999, 999999, True, 
+                                                                      5, 'Tai Po', 999999, 999999, True, 
+                                                                      6, 'Tai Po', 999999, 999999, True, 
+                                                                      7, 'Tai Po', 999999, 999999, True, 
+                                                                      8, 'Tai Po', 999999, 999999, True, 
+                                                                      9, 'Tai Po', 999999, 999999, True, 
+                                                                      10, 'Tai Po', 999999, 999999, True,
+                                                                      11, 'Tai Po', 999999, 999999, True, '',]), \
+             patch('builtins.open', new_callable=mock_open), \
+             patch('json.dump') as mock_json_dump:
+            self.gameboard.start_or_load_design_gameboard()
+            mock_json_dump.assert_called_once()
+
+    def test_start_or_load_design_gameboard_load_existing(self):
+        mock_json_data = json.dumps({
+            "enforce_square_design": True,
+            "size": 4,
+            "properties": [],
+            "functions": []
+        })
+        with patch('vars.handle_question_with_options', return_value='1'), \
+            patch('vars.handle_question_with_function', side_effect=['test_gameboard.json', '']), \
+             patch('builtins.open', new_callable=mock_open, read_data=mock_json_data):
+            self.gameboard.start_or_load_design_gameboard()
+
 
 if __name__ == '__main__':
     unittest.main()
