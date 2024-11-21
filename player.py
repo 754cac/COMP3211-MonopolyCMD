@@ -108,53 +108,6 @@ class Player:
         else:
             return self.roll_dice()  # If not jailed, roll the dice normally
 
-        if self.is_jailed:
-            if self.jailed_rounds_count_down == 3:
-                print(f'{self.name} is jailed for the 1st round and cannot make a move!')
-                self.jailed_rounds_count_down -= 1
-                return [None, None]  # No action can be taken
-
-            elif self.jailed_rounds_count_down == 2:
-                print(f'{self.name} is jailed for the 2nd round and cannot make a move!')
-                self.jailed_rounds_count_down -= 1
-                return [None, None]  # No action can be taken
-
-            elif self.jailed_rounds_count_down == 1:
-                # This is the 3rd round, check if the player can pay the fine
-                if self.money > jailbreak_price:
-                    selection = vars.handle_question_with_options(f'Pay ${jailbreak_price} to jailbreak immediately [Y / n]? ', ['y', 'n', ''])
-                    if selection.lower() == 'y' or selection.lower() == '':
-                        self.money -= jailbreak_price
-                        print(f'{self.name} jailbreak success by paying ${jailbreak_price}!')
-                        self.is_jailed = False
-                        self.jailed_rounds_count_down = 3  # Reset the countdown
-                        return self.roll_dice()
-                else:
-                    print(f'{self.name} cannot pay the jailbreak fine of ${jailbreak_price} and must roll the dice.')
-
-            # Roll the dice for the 3rd round if not paying
-            first_roll, second_roll = self.roll_dice()
-            print(f'{self.name} rolled 2 dice: [{first_roll}, {second_roll}]')
-            if first_roll == second_roll:
-                print(f'{self.name} jailbreak success by luck!')
-                self.is_jailed = False
-                self.jailed_rounds_count_down = 3  # Reset the countdown
-                return [first_roll, second_roll]
-            else:
-                print(f'{self.name} failed to roll doubles.')
-                self.jailed_rounds_count_down -= 1  # Decrement the countdown
-                if self.jailed_rounds_count_down == 0:
-                    print(f'{self.name} is forced to pay ${jailbreak_price} for jailbreak!')
-                    self.money -= jailbreak_price
-                    self.is_jailed = False
-                    self.jailed_rounds_count_down = 3  # Reset the countdown
-                    return self.roll_dice()
-
-            return [None, None]  # No action can be taken if still jailed
-        else:
-            return self.roll_dice()  # If not jailed, roll the dice normally
-
-
     def retired(self):
         self.is_retired = True
         self.money = 0
