@@ -91,7 +91,10 @@ class Gameboard:
             except:
                 default_design = {}
 
-        check_design(default_design)
+        if not check_design(default_design):
+            self.actual_layout = {} 
+            return
+
         # self.__design = default_design
 
         layout = {}
