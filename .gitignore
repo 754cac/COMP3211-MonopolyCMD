@@ -160,4 +160,5 @@ cython_debug/
 #.idea/
 
 # visual paradigm
-Diagram/*.vpp.bak_*
+Report/Design document/*.vpp.bak_*
+Report/Design document/*.lck
