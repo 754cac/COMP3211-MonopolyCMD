@@ -62,7 +62,7 @@
                 8
             ],
             "is_jailed": true,
-            "jailed_rounds_count_down": 2,
+            "jailed_rounds_count_down": 3,
             "is_retired": false,
             "gameboard_size": 20,
             "game_id": "bPYXeTsli87v"
@@ -82,13 +82,13 @@
         "RFaY7cZmF": {
             "name": "E",
             "id": "RFaY7cZmF",
-            "location": 19,
-            "money": 1150,
+            "location": 6,
+            "money": 1690,
             "owned_properties": [
                 7,
                 18
             ],
-            "is_jailed": false,
+            "is_jailed": true,
             "jailed_rounds_count_down": 3,
             "is_retired": false,
             "gameboard_size": 20,
