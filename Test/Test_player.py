@@ -9,6 +9,9 @@ class TestPlayer(unittest.TestCase):
     def setUp(self):
         self.player = Player("TestPlayer", 10, "game_1")
 
+    def tearDown(self):
+        self.player = None
+
     def test_initialization(self):
         self.assertEqual(self.player.name, "TestPlayer")
         self.assertEqual(self.player.gameboard_size, 10)
@@ -35,12 +38,10 @@ class TestPlayer(unittest.TestCase):
         self.assertEqual(self.player.location, vars.PLAYER_DEFAULT_PROPERTIES['location'] + 5)
 
     def test_adjust_location(self):
-        # 測試 location 不需要調整的情況
         self.player.location = 5
         self.player.adjust_location()
         self.assertEqual(self.player.location, 5)
 
-        # 測試 location 超出棋盤範圍的情況
         self.player.location = 12
         self.player.adjust_location()
         self.assertEqual(self.player.location, 2)
@@ -65,7 +66,7 @@ class TestPlayer(unittest.TestCase):
         dice = self.player.jailbreak(50)
 
         self.assertFalse(self.player.is_jailed)
-        self.assertEqual(self.player.money, 150)  # 減去 50
+        self.assertEqual(self.player.money, 150)
         self.assertEqual(dice, [2, 2])
         mock_handle_question_with_options.assert_called_once()
         mock_roll_dice.assert_called_once()
@@ -78,32 +79,31 @@ class TestPlayer(unittest.TestCase):
         dice = self.player.jailbreak(50)
 
         self.assertFalse(self.player.is_jailed)
-        self.assertEqual(self.player.jailed_rounds_count_down, 3)  # 重置倒計時
+        self.assertEqual(self.player.jailed_rounds_count_down, 3)
         self.assertEqual(dice, [3, 3])
         mock_roll_dice.assert_called_once()
 
     def test_jailbreak_failed_no_money(self):
         self.player.is_jailed = True
         self.player.jailed_rounds_count_down = 1
-        self.player.money = 30  # 不足以支付
+        self.player.money = 30 
 
         dice = self.player.jailbreak(50)
 
         self.assertTrue(self.player.is_jailed)
-        self.assertEqual(self.player.money, 30)  # 金額不變
+        self.assertEqual(self.player.money, 30) 
         self.assertIsNone(dice[0])
         self.assertIsNone(dice[1])
 
     def test_jailbreak_forced_payment(self):
         self.player.is_jailed = True
-        self.player.jailed_rounds_count_down = 0  # 倒計時結束
+        self.player.jailed_rounds_count_down = 0 
         self.player.money = 100
 
         dice = self.player.jailbreak(50)
 
         self.assertFalse(self.player.is_jailed)
-        self.assertEqual(self.player.money, 50)  # 減去 50
-
+        self.assertEqual(self.player.money, 50) 
     def test_retired(self):
         self.player.retired()
         self.assertTrue(self.player.is_retired)

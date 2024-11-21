@@ -19,6 +19,10 @@ class TestGameFunctions(unittest.TestCase):
             "jailbreak_price": 50
         }
 
+    def tearDown(self):
+        self.player = None
+        self.game_parameters = None
+        
     def test_go(self):
         go(self.player, self.game_parameters)
         self.assertEqual(self.player.money, 1200)
